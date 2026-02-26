@@ -1,22 +1,10 @@
-# Dependencies
-node_modules/
-
-# Build output
-dist/
-
-# Local env files
-.env
-.env.local
-.env.*.local
-
-# Editor directories
-.vscode/
-.idea/
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-npm-debug.log*
+{
+  "name": "modell-vp-finansiering",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}
