@@ -57,7 +57,10 @@ const PensumVerdipapirbelaning = () => {
   const [renteOppdatert, setRenteOppdatert] = useState(null);
 
   useEffect(() => {
-    fetch('/rates.json')
+    // Henter direkte fra GitHub – oppdateres uten redeploy
+    const RATES_URL =
+      'https://raw.githubusercontent.com/magnuslangberg-lgtm/Modell-for-Verdipapirbel-ning/main/public/rates.json';
+    fetch(RATES_URL)
       .then(res => res.json())
       .then(data => {
         if (data.rates) setBaserenter(data.rates);
