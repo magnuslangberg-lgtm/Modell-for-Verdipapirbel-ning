@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, ComposedChart, Bar } from 'recharts';
 
 const PensumVerdipapirbelaning = () => {
@@ -47,13 +47,24 @@ const PensumVerdipapirbelaning = () => {
 
   const aktivaklasser = getAktivaklasser(enkeltaksjerDiversifisert);
 
-  // Baserenter (3M) - oppdatert januar 2026
-  const baserenter = {
+  // Baserenter (3M) – lastes fra /rates.json, med fallback-verdier
+  const [baserenter, setBaserenter] = useState({
     NOK: { navn: 'NIBOR 3M', rate: 4.00, oppdatert: '03.01.2026' },
     EUR: { navn: 'EURIBOR 3M', rate: 2.25, oppdatert: '03.01.2026' },
     USD: { navn: 'SOFR 3M', rate: 3.60, oppdatert: '02.01.2026' },
-    SEK: { navn: 'STIBOR 3M', rate: 2.45, oppdatert: '03.01.2026' }
-  };
+    SEK: { navn: 'STIBOR 3M', rate: 2.00, oppdatert: '03.03.2026' }
+  });
+  const [renteOppdatert, setRenteOppdatert] = useState(null);
+
+  useEffect(() => {
+    fetch('/rates.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data.rates) setBaserenter(data.rates);
+        if (data.updated) setRenteOppdatert(data.updated);
+      })
+      .catch(() => {}); // Beholder fallback-verdier ved feil
+  }, []);
 
   const valgtValuta = baserenter[valuta];
   const totalRente = valgtValuta.rate + rentepaaslag;
@@ -588,6 +599,11 @@ const PensumVerdipapirbelaning = () => {
                 </div>
                 <span style={{ fontSize: '18px', fontWeight: '700', color: colors.danger }}>{totalRente.toFixed(2)}%</span>
               </div>
+              {renteOppdatert && (
+                <div style={{ marginTop: '6px', fontSize: '9px', color: colors.textMuted, textAlign: 'right' }}>
+                  Renter sist oppdatert: {renteOppdatert}
+                </div>
+              )}
             </div>
 
             {/* Parametere */}

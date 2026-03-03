@@ -1,0 +1,33 @@
+name: Oppdater pengemarkedsrenter
+
+on:
+  schedule:
+    # Kjøres hver mandag kl. 07:00 UTC (09:00 norsk tid)
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+    # Kan også kjøres manuelt fra GitHub → Actions-fanen
+
+jobs:
+  update-rates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Hent gjeldende baserenter
+        run: python3 scripts/fetch_rates.py
+
+      - name: Commit og push oppdatert rates.json
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add public/rates.json
+          if git diff --staged --quiet; then
+            echo "Ingen renteendringer – ingenting å committe."
+          else
+            git commit -m "Oppdater baserenter $(date +'%d.%m.%Y')"
+            git push
+          fi
