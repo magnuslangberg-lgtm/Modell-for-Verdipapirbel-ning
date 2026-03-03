@@ -481,7 +481,7 @@ const PensumVerdipapirbelaning = () => {
                   <div style={{ marginBottom: '14px', padding: '8px 10px', background: colors.lightGray, borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div>
                       <div style={{ fontSize: '10px', fontWeight: '500' }}>Enkeltaksjer diversifisert?</div>
-                      <div style={{ fontSize: '9px', color: colors.textMuted }}>{enkeltaksjerDiversifisert ? '60% LTV' : '20% LTV'}</div>
+                      <div style={{ fontSize: '9px', color: colors.textMuted }}>{enkeltaksjerDiversifisert ? '50% LTV' : '20% LTV'}</div>
                     </div>
                     <div className={`toggle-switch ${enkeltaksjerDiversifisert ? 'active' : ''}`} onClick={() => setEnkeltaksjerDiversifisert(!enkeltaksjerDiversifisert)} />
                   </div>
@@ -517,7 +517,7 @@ const PensumVerdipapirbelaning = () => {
                   <div style={{ marginBottom: '10px', padding: '8px 10px', background: `${colors.primaryLight}10`, borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid ${colors.primaryLight}30` }}>
                     <div>
                       <div style={{ fontSize: '10px', fontWeight: '500' }}>Enkeltaksjer diversifisert?</div>
-                      <div style={{ fontSize: '9px', color: colors.textMuted }}>{enkeltaksjerDiversifisert ? '60%' : '20%'} LTV</div>
+                      <div style={{ fontSize: '9px', color: colors.textMuted }}>{enkeltaksjerDiversifisert ? '50%' : '20%'} LTV</div>
                     </div>
                     <div className={`toggle-switch ${enkeltaksjerDiversifisert ? 'active' : ''}`} onClick={() => setEnkeltaksjerDiversifisert(!enkeltaksjerDiversifisert)} />
                   </div>
@@ -1102,7 +1102,7 @@ const PensumVerdipapirbelaning = () => {
                 ))}
               </div>
               <div style={{ marginTop: '8px', fontSize: '9px', color: colors.textMuted, fontStyle: 'italic' }}>
-                * Enkeltaksjer: 20% konsentrert / 60% diversifisert (maks 20% per aksje)
+                * Enkeltaksjer: 20% konsentrert / 50% diversifisert (maks 20% per aksje)
               </div>
             </div>
 
