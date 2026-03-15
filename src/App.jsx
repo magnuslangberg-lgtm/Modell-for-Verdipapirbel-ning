@@ -381,10 +381,10 @@ const PensumVerdipapirbelaning = () => {
 
   const PensumLogo = () => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-      {/* Pensum P-ikon – stroket, iht. profilhåndbok breddeformat */}
+      {/* Pensum P-ikon – åpen bolle, stroket iht. profilhåndbok */}
       <svg width="44" height="48" viewBox="0 0 100 110" fill="none">
         <path
-          d="M22,100 L22,8 C84,8 84,54 22,54"
+          d="M22,100 L22,10 L58,10 C80,10 80,56 38,56"
           fill="none"
           stroke="#4f8aa9"
           strokeWidth="10"
