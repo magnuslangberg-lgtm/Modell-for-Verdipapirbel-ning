@@ -384,10 +384,10 @@ const PensumVerdipapirbelaning = () => {
       {/* Pensum P-ikon – åpen bolle, stroket iht. profilhåndbok */}
       <svg width="44" height="48" viewBox="0 0 100 110" fill="none">
         <path
-          d="M22,100 L22,10 L58,10 C80,10 80,56 38,56"
+          d="M20,100 L20,8 L38,8 C78,8 78,58 36,58"
           fill="none"
           stroke="#4f8aa9"
-          strokeWidth="10"
+          strokeWidth="9"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
