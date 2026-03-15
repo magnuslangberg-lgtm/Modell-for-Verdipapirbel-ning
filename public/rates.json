@@ -1,0 +1,9 @@
+{
+  "updated": "2026-03-03",
+  "rates": {
+    "NOK": { "navn": "NIBOR 3M", "rate": 4.00, "oppdatert": "03.03.2026" },
+    "EUR": { "navn": "EURIBOR 3M", "rate": 2.25, "oppdatert": "03.03.2026" },
+    "USD": { "navn": "SOFR 3M", "rate": 3.60, "oppdatert": "03.03.2026" },
+    "SEK": { "navn": "STIBOR 3M", "rate": 2.00, "oppdatert": "03.03.2026" }
+  }
+}
