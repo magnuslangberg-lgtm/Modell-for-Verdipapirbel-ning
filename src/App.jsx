@@ -380,13 +380,23 @@ const PensumVerdipapirbelaning = () => {
   };
 
   const PensumLogo = () => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-      <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
-        <path d="M20 15 L20 85 L35 85 L35 60 L55 60 C75 60 85 50 85 37.5 C85 25 75 15 55 15 L20 15 Z M35 28 L52 28 C62 28 70 32 70 37.5 C70 43 62 47 52 47 L35 47 L35 28 Z" fill="#4f8aa9"/>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+      {/* Pensum P-ikon – streket versjon iht. profilhåndbok */}
+      <svg width="36" height="44" viewBox="0 0 72 88" fill="none">
+        <path
+          d="M18,82 L18,10 C62,10 62,55 18,55"
+          fill="none"
+          stroke="#4f8aa9"
+          strokeWidth="9"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
-      <div style={{ borderLeft: '2px solid rgba(255,255,255,0.3)', paddingLeft: '12px', height: '36px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div style={{ fontSize: '15px', fontWeight: '800', letterSpacing: '3px', fontFamily: "'Open Sans', sans-serif" }}>PENSUM</div>
-        <div style={{ fontSize: '9px', letterSpacing: '2px', opacity: 0.8, fontFamily: "'Open Sans', sans-serif", fontWeight: '600' }}>ASSET MANAGEMENT</div>
+      {/* Tynn vertikal linje – breddeformat */}
+      <div style={{ width: '1px', height: '38px', background: 'rgba(255,255,255,0.35)' }} />
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2px' }}>
+        <div style={{ fontSize: '15px', fontWeight: '800', letterSpacing: '4px', fontFamily: "'Open Sans', sans-serif", lineHeight: 1 }}>PENSUM</div>
+        <div style={{ fontSize: '9px', letterSpacing: '2.5px', opacity: 0.75, fontFamily: "'Open Sans', sans-serif", fontWeight: '400', lineHeight: 1 }}>ASSET MANAGEMENT</div>
       </div>
     </div>
   );
