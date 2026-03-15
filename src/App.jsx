@@ -34,15 +34,15 @@ const PensumVerdipapirbelaning = () => {
   // Aktivaklasser med maks LTV
   const getAktivaklasser = (diversifisert) => ({
     cash: { navn: 'Cash', maksLTV: 100, farge: '#2e7d4a' },
-    pengemarkedsfond: { navn: 'Pengemarkedsfond', maksLTV: 90, farge: '#3d8a6e' },
-    enkeltaksjer: { 
-      navn: 'Enkeltaksjer', 
-      maksLTV: diversifisert ? 50 : 20, 
-      farge: '#4a7db8',
+    pengemarkedsfond: { navn: 'Pengemarkedsfond', maksLTV: 90, farge: '#4f8aa9' },
+    enkeltaksjer: {
+      navn: 'Enkeltaksjer',
+      maksLTV: diversifisert ? 50 : 20,
+      farge: '#123e6a',
       info: diversifisert ? 'Maks 20% per aksje' : 'Konsentrert posisjon'
     },
-    hoyrentefond: { navn: 'Høyrentefond', maksLTV: 80, farge: '#6a5acd' },
-    aksjefond: { navn: 'Aksjefond', maksLTV: 60, farge: '#1e3a5f' }
+    hoyrentefond: { navn: 'Høyrentefond', maksLTV: 80, farge: '#d3826a' },
+    aksjefond: { navn: 'Aksjefond', maksLTV: 60, farge: '#0d2841' }
   });
 
   const aktivaklasser = getAktivaklasser(enkeltaksjerDiversifisert);
@@ -72,19 +72,20 @@ const PensumVerdipapirbelaning = () => {
   const valgtValuta = baserenter[valuta];
   const totalRente = valgtValuta.rate + rentepaaslag;
 
-  // Pensum fargepalett
+  // Pensum fargepalett – iht. NY Pensum Profilhåndbok 2021
   const colors = {
-    primary: '#1e3a5f',
-    primaryLight: '#5B8DB8',
-    primaryDark: '#0f2540',
-    accent: '#c9a227',
+    primary: '#123e6a',       // BLÅ – primærfarge
+    primaryLight: '#4f8aa9',  // MELLOMBLÅ – sekundærfarge
+    primaryDark: '#0d2841',   // DYP BLÅSORT – mørkeste blå
+    accent: '#d3826a',        // KOBBER – sekundær aksent
     white: '#ffffff',
-    lightGray: '#f5f7fa',
-    mediumGray: '#e8ecf1',
-    textDark: '#1a1a1a',
-    textMuted: '#5a6a7a',
+    lightGray: '#f4f5f7',     // Lys grå bakgrunn
+    mediumGray: '#D0D0CE',    // Cool Grey 2
+    darkGray: '#B1B3B3',      // Cool Grey 5
+    textDark: '#0d2841',      // Dyp blåsort for tekst
+    textMuted: '#6b7a8d',
     success: '#2e7d4a',
-    warning: '#d4a017',
+    warning: '#d3826a',       // Bruker kobber for advarsler
     danger: '#b33a3a'
   };
 
@@ -381,11 +382,11 @@ const PensumVerdipapirbelaning = () => {
   const PensumLogo = () => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
       <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
-        <path d="M20 15 L20 85 L35 85 L35 60 L55 60 C75 60 85 50 85 37.5 C85 25 75 15 55 15 L20 15 Z M35 28 L52 28 C62 28 70 32 70 37.5 C70 43 62 47 52 47 L35 47 L35 28 Z" fill="#5B8DB8"/>
+        <path d="M20 15 L20 85 L35 85 L35 60 L55 60 C75 60 85 50 85 37.5 C85 25 75 15 55 15 L20 15 Z M35 28 L52 28 C62 28 70 32 70 37.5 C70 43 62 47 52 47 L35 47 L35 28 Z" fill="#4f8aa9"/>
       </svg>
       <div style={{ borderLeft: '2px solid rgba(255,255,255,0.3)', paddingLeft: '12px', height: '36px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div style={{ fontSize: '15px', fontWeight: '700', letterSpacing: '2px' }}>PENSUM</div>
-        <div style={{ fontSize: '9px', letterSpacing: '1.5px', opacity: 0.85 }}>ASSET MANAGEMENT</div>
+        <div style={{ fontSize: '15px', fontWeight: '800', letterSpacing: '3px', fontFamily: "'Open Sans', sans-serif" }}>PENSUM</div>
+        <div style={{ fontSize: '9px', letterSpacing: '2px', opacity: 0.8, fontFamily: "'Open Sans', sans-serif", fontWeight: '600' }}>ASSET MANAGEMENT</div>
       </div>
     </div>
   );
@@ -393,38 +394,38 @@ const PensumVerdipapirbelaning = () => {
   return (
     <div style={{ minHeight: '100vh', background: colors.lightGray, fontFamily: "'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", color: colors.textDark }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
         * { box-sizing: border-box; }
-        input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: #e0e5eb; outline: none; margin: 14px 0; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: ${colors.primary}; cursor: pointer; border: 3px solid ${colors.white}; box-shadow: 0 2px 6px rgba(30, 58, 95, 0.3); }
-        input[type="number"] { background: ${colors.white}; border: 1px solid #d0d7e0; border-radius: 6px; padding: 10px 12px; color: ${colors.textDark}; font-family: 'Open Sans', sans-serif; font-size: 14px; width: 100%; }
-        input[type="number"]:focus { outline: none; border-color: ${colors.primary}; box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1); }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: ${colors.mediumGray}; outline: none; margin: 14px 0; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: ${colors.primary}; cursor: pointer; border: 3px solid ${colors.white}; box-shadow: 0 2px 6px rgba(18, 62, 106, 0.3); }
+        input[type="number"] { background: ${colors.white}; border: 1px solid ${colors.mediumGray}; border-radius: 6px; padding: 10px 12px; color: ${colors.textDark}; font-family: 'Open Sans', sans-serif; font-size: 14px; width: 100%; }
+        input[type="number"]:focus { outline: none; border-color: ${colors.primary}; box-shadow: 0 0 0 3px rgba(18, 62, 106, 0.1); }
         input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .pensum-card { background: ${colors.white}; border-radius: 8px; padding: 24px; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); border: 1px solid rgba(0, 0, 0, 0.04); }
         .pensum-header { background: linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%); color: ${colors.white}; padding: 20px 40px; margin-bottom: 24px; }
         .result-box { background: ${colors.lightGray}; border-radius: 6px; padding: 14px 16px; border-left: 4px solid ${colors.primary}; }
-        .result-box.highlight { border-left-color: ${colors.accent}; background: linear-gradient(135deg, rgba(201, 162, 39, 0.08) 0%, rgba(201, 162, 39, 0.02) 100%); }
+        .result-box.highlight { border-left-color: ${colors.accent}; background: linear-gradient(135deg, rgba(211, 130, 106, 0.08) 0%, rgba(211, 130, 106, 0.02) 100%); }
         .result-box.danger { border-left-color: ${colors.danger}; background: linear-gradient(135deg, rgba(179, 58, 58, 0.08) 0%, rgba(179, 58, 58, 0.02) 100%); }
         .result-box.success { border-left-color: ${colors.success}; background: linear-gradient(135deg, rgba(46, 125, 74, 0.08) 0%, rgba(46, 125, 74, 0.02) 100%); }
-        .btn-modus { padding: 10px 18px; border: 2px solid ${colors.primary}; border-radius: 6px; font-family: 'Open Sans', sans-serif; font-weight: 600; font-size: 12px; cursor: pointer; transition: all 0.2s ease; }
+        .btn-modus { padding: 10px 18px; border: 2px solid ${colors.primary}; border-radius: 6px; font-family: 'Open Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s ease; }
         .btn-modus.active { background: ${colors.primary}; color: ${colors.white}; }
         .btn-modus.inactive { background: ${colors.white}; color: ${colors.primary}; }
         .btn-modus.inactive:hover { background: ${colors.lightGray}; }
-        .valuta-btn { padding: 10px 12px; border: 2px solid #d0d7e0; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; background: ${colors.white}; display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+        .valuta-btn { padding: 10px 12px; border: 2px solid ${colors.mediumGray}; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; background: ${colors.white}; display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
         .valuta-btn:hover { border-color: ${colors.primary}; }
-        .valuta-btn.selected { border-color: ${colors.primary}; background: rgba(30, 58, 95, 0.05); }
+        .valuta-btn.selected { border-color: ${colors.primary}; background: rgba(18, 62, 106, 0.05); }
         .data-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 11px; }
-        .data-table th { background: ${colors.primary}; color: ${colors.white}; padding: 10px 10px; text-align: right; font-weight: 600; font-size: 10px; text-transform: uppercase; }
+        .data-table th { background: ${colors.primary}; color: ${colors.white}; padding: 10px 10px; text-align: right; font-weight: 800; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; }
         .data-table th:first-child { text-align: left; border-radius: 6px 0 0 0; }
         .data-table th:last-child { border-radius: 0 6px 0 0; }
         .data-table td { padding: 9px 10px; text-align: right; border-bottom: 1px solid ${colors.mediumGray}; }
         .data-table td:first-child { text-align: left; font-weight: 500; }
         .data-table tr:hover td { background: ${colors.lightGray}; }
-        .positive { color: ${colors.success}; font-weight: 500; }
-        .negative { color: ${colors.danger}; font-weight: 500; }
-        .section-title { font-family: 'Playfair Display', Georgia, serif; font-size: 16px; font-weight: 600; color: ${colors.primary}; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid ${colors.mediumGray}; }
+        .positive { color: ${colors.success}; font-weight: 600; }
+        .negative { color: ${colors.danger}; font-weight: 600; }
+        .section-title { font-family: 'Open Sans', sans-serif; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: ${colors.primary}; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid ${colors.mediumGray}; }
         .label-text { font-size: 12px; color: ${colors.textMuted}; font-weight: 500; }
-        .value-text { font-size: 12px; font-weight: 600; color: ${colors.primary}; }
+        .value-text { font-size: 12px; font-weight: 700; color: ${colors.primary}; }
         .portfolio-input { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid ${colors.mediumGray}; }
         .portfolio-input:last-child { border-bottom: none; }
         .portfolio-bar { height: 6px; border-radius: 3px; background: ${colors.mediumGray}; flex: 1; overflow: hidden; }
@@ -433,9 +434,9 @@ const PensumVerdipapirbelaning = () => {
         .toggle-switch.active { background: ${colors.success}; }
         .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: transform 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .toggle-switch.active::after { transform: translateX(18px); }
-        .warning-box { background: #fef9e7; border: 1px solid ${colors.warning}; border-radius: 6px; padding: 12px 16px; margin-top: 14px; }
+        .warning-box { background: rgba(211,130,106,0.07); border: 1px solid ${colors.accent}; border-radius: 6px; padding: 12px 16px; margin-top: 14px; }
         .danger-box { background: #fdf2f2; border: 1px solid ${colors.danger}; border-radius: 6px; padding: 12px 16px; margin-top: 14px; }
-        .info-box { background: #e8f4fc; border: 1px solid #4a9fd4; border-radius: 6px; padding: 12px 16px; margin-top: 14px; }
+        .info-box { background: rgba(79,138,169,0.08); border: 1px solid ${colors.primaryLight}; border-radius: 6px; padding: 12px 16px; margin-top: 14px; }
       `}</style>
       
       {/* Header */}
@@ -443,7 +444,7 @@ const PensumVerdipapirbelaning = () => {
         <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <PensumLogo />
           <div style={{ textAlign: 'right' }}>
-            <h1 style={{ fontSize: '20px', fontWeight: '600', margin: 0, fontFamily: "'Playfair Display', Georgia, serif" }}>
+            <h1 style={{ fontSize: '20px', fontWeight: '800', margin: 0, fontFamily: "'Open Sans', sans-serif", letterSpacing: '0.5px' }}>
               Verdipapirbelåning Kalkulator
             </h1>
             <div style={{ fontSize: '11px', opacity: 0.7, marginTop: '2px' }}>Beregn opplåning, reinvestering og kontantuttak</div>
