@@ -31,6 +31,11 @@ const PensumVerdipapirbelaning = () => {
   const [investeringstype, setInvesteringstype] = useState('eiendom'); // 'eiendom', 'pe'
   const [investeringAvkastning, setInvesteringAvkastning] = useState(12); // Forventet avkastning på eiendom/PE
 
+  // Eksisterende lån (lånramme og benyttet beløp)
+  const [visEksisterendeLan, setVisEksisterendeLan] = useState(false);
+  const [lanRamme, setLanRamme] = useState(5000000);
+  const [benyttetLan, setBenyttetLan] = useState(2000000);
+
   // Aktivaklasser med maks LTV
   const getAktivaklasser = (diversifisert) => ({
     cash: { navn: 'Cash', maksLTV: 100, farge: '#2e7d4a' },
@@ -651,6 +656,82 @@ const PensumVerdipapirbelaning = () => {
                 </label>
                 <input type="range" min="1" max="20" value={tidshorisont} onChange={(e) => setTidshorisont(Number(e.target.value))} />
               </div>
+            </div>
+
+            {/* Eksisterende lån */}
+            <div className="pensum-card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: visEksisterendeLan ? '14px' : 0 }}>
+                <h2 className="section-title" style={{ margin: 0, padding: 0, border: 'none' }}>Eksisterende lån</h2>
+                <div className={`toggle-switch ${visEksisterendeLan ? 'active' : ''}`} onClick={() => setVisEksisterendeLan(!visEksisterendeLan)} />
+              </div>
+
+              {visEksisterendeLan && (() => {
+                const sikkerRamme = Math.max(0, lanRamme);
+                const sikkerBenyttet = Math.max(0, Math.min(benyttetLan, sikkerRamme));
+                const gjenstaende = sikkerRamme - sikkerBenyttet;
+                const utnyttelse = sikkerRamme > 0 ? (sikkerBenyttet / sikkerRamme) * 100 : 0;
+                const utnyttelseFarge = utnyttelse >= 90 ? colors.danger : utnyttelse >= 70 ? colors.accent : colors.success;
+
+                return (
+                  <>
+                    <div style={{ fontSize: '11px', color: colors.textMuted, marginBottom: '12px' }}>
+                      Registrer lånrammen din og hvor mye som allerede er benyttet for å se gjenværende kapasitet.
+                    </div>
+
+                    <div style={{ marginBottom: '12px' }}>
+                      <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <span className="label-text">Total lånramme</span>
+                        <span className="value-text">{formatNOK(sikkerRamme)}</span>
+                      </label>
+                      <input type="number" value={lanRamme} onChange={(e) => setLanRamme(Number(e.target.value) || 0)} step={100000} min={0} />
+                    </div>
+
+                    <div style={{ marginBottom: '14px' }}>
+                      <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <span className="label-text">Benyttet lån</span>
+                        <span className="value-text">{formatNOK(sikkerBenyttet)}</span>
+                      </label>
+                      <input type="number" value={benyttetLan} onChange={(e) => setBenyttetLan(Number(e.target.value) || 0)} step={100000} min={0} />
+                    </div>
+
+                    <div style={{ marginBottom: '12px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                        <span style={{ fontSize: '10px', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Utnyttelse</span>
+                        <span style={{ fontSize: '12px', fontWeight: '700', color: utnyttelseFarge }}>{formatProsent(utnyttelse)}</span>
+                      </div>
+                      <div style={{ height: '10px', background: colors.mediumGray, borderRadius: '5px', overflow: 'hidden' }}>
+                        <div style={{ width: `${Math.min(utnyttelse, 100)}%`, height: '100%', background: utnyttelseFarge, borderRadius: '5px', transition: 'width 0.3s ease' }} />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                      <div className="result-box" style={{ borderLeftColor: colors.danger }}>
+                        <div style={{ fontSize: '9px', color: colors.textMuted, marginBottom: '3px', textTransform: 'uppercase' }}>Benyttet</div>
+                        <div style={{ fontSize: '14px', fontWeight: '700', color: colors.danger }}>{formatNOK(sikkerBenyttet)}</div>
+                      </div>
+                      <div className="result-box success">
+                        <div style={{ fontSize: '9px', color: colors.textMuted, marginBottom: '3px', textTransform: 'uppercase' }}>Gjenstående</div>
+                        <div style={{ fontSize: '14px', fontWeight: '700', color: colors.success }}>{formatNOK(gjenstaende)}</div>
+                      </div>
+                    </div>
+
+                    {sikkerRamme > 0 && (
+                      <div style={{ marginTop: '10px', padding: '8px 12px', background: colors.lightGray, borderRadius: '5px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '11px', color: colors.textMuted }}>Årlig rentekostnad benyttet lån</span>
+                        <span style={{ fontSize: '12px', fontWeight: '700', color: colors.danger }}>{formatNOK(sikkerBenyttet * (totalRente / 100))}</span>
+                      </div>
+                    )}
+
+                    {benyttetLan > lanRamme && lanRamme > 0 && (
+                      <div className="danger-box">
+                        <div style={{ fontSize: '11px', color: colors.danger, fontWeight: '600' }}>
+                          ⚠️ Benyttet lån overskrider rammen med {formatNOK(benyttetLan - lanRamme)}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </div>
           </div>
 
