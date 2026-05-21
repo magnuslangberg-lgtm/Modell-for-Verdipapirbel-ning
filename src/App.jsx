@@ -23,18 +23,18 @@ const PensumVerdipapirbelaning = () => {
   
   const [reinvesteringAvkastning, setReinvesteringAvkastning] = useState(8);
   const [tidshorisont, setTidshorisont] = useState(5);
-  const [modus, setModus] = useState('reinvestering'); // 'reinvestering', 'kontantuttak', 'maksbelaning'
+  const [modus, setModus] = useState('reinvestering'); // 'reinvestering', 'kontantuttak'
   const [visDetaljer, setVisDetaljer] = useState(true);
+  const [visMaksBelaning, setVisMaksBelaning] = useState(false);
   
   // Investeringsscenario for kontantuttak
   const [visInvesteringsscenario, setVisInvesteringsscenario] = useState(false);
   const [investeringstype, setInvesteringstype] = useState('eiendom'); // 'eiendom', 'pe'
   const [investeringAvkastning, setInvesteringAvkastning] = useState(12); // Forventet avkastning på eiendom/PE
 
-  // Eksisterende lån (lånramme og benyttet beløp)
+  // Eksisterende lån – ramme regnes ut fra LTV × egenkapital; benyttet fylles inn manuelt
   const [visEksisterendeLan, setVisEksisterendeLan] = useState(false);
-  const [lanRamme, setLanRamme] = useState(5000000);
-  const [benyttetLan, setBenyttetLan] = useState(2000000);
+  const [benyttetLan, setBenyttetLan] = useState(0);
 
   // Aktivaklasser med maks LTV
   const getAktivaklasser = (diversifisert) => ({
@@ -468,17 +468,25 @@ const PensumVerdipapirbelaning = () => {
       </div>
 
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 20px 40px' }}>
-        {/* Modus-velger - 3 knapper */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '24px' }}>
-          <button className={`btn-modus ${modus === 'reinvestering' ? 'active' : 'inactive'}`} onClick={() => setModus('reinvestering')}>
-            📈 Reinvestering
-          </button>
-          <button className={`btn-modus ${modus === 'kontantuttak' ? 'active' : 'inactive'}`} onClick={() => setModus('kontantuttak')}>
-            💵 Kontantuttak
-          </button>
-          <button className={`btn-modus ${modus === 'maksbelaning' ? 'active' : 'inactive'}`} onClick={() => setModus('maksbelaning')}>
-            🚀 Maks belåning
-          </button>
+        {/* Modus-velger */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button className={`btn-modus ${modus === 'reinvestering' ? 'active' : 'inactive'}`} onClick={() => setModus('reinvestering')}>
+              📈 Reinvestering
+            </button>
+            <button className={`btn-modus ${modus === 'kontantuttak' ? 'active' : 'inactive'}`} onClick={() => setModus('kontantuttak')}>
+              💵 Kontantuttak
+            </button>
+          </div>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '12px', fontWeight: '600', color: colors.primary }}>
+            <input
+              type="checkbox"
+              checked={visMaksBelaning}
+              onChange={(e) => setVisMaksBelaning(e.target.checked)}
+              style={{ width: '16px', height: '16px', cursor: 'pointer', accentColor: colors.primary }}
+            />
+            🚀 Vis maks belåning
+          </label>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 400px) 1fr', gap: '20px', alignItems: 'start' }}>
@@ -629,17 +637,15 @@ const PensumVerdipapirbelaning = () => {
             <div className="pensum-card">
               <h2 className="section-title">Parametere</h2>
               
-              {modus !== 'maksbelaning' && (
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                    <span className="label-text">Belåningsgrad (LTV)</span>
-                    <span className="value-text" style={{ color: ltvOverMaks ? colors.danger : colors.primary }}>
-                      {ltv}%{ltvOverMaks && <span style={{ fontWeight: '400', fontSize: '10px' }}> → {portefoljeBeregning.vektetMaksLTV.toFixed(0)}%</span>}
-                    </span>
-                  </label>
-                  <input type="range" min="0" max="100" value={ltv} onChange={(e) => setLtv(Number(e.target.value))} />
-                </div>
-              )}
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                  <span className="label-text">Belåningsgrad (LTV)</span>
+                  <span className="value-text" style={{ color: ltvOverMaks ? colors.danger : colors.primary }}>
+                    {ltv}%{ltvOverMaks && <span style={{ fontWeight: '400', fontSize: '10px' }}> → {portefoljeBeregning.vektetMaksLTV.toFixed(0)}%</span>}
+                  </span>
+                </label>
+                <input type="range" min="0" max="100" value={ltv} onChange={(e) => setLtv(Number(e.target.value))} />
+              </div>
 
               <div style={{ marginBottom: '16px' }}>
                 <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
@@ -666,24 +672,27 @@ const PensumVerdipapirbelaning = () => {
               </div>
 
               {visEksisterendeLan && (() => {
-                const sikkerRamme = Math.max(0, lanRamme);
-                const sikkerBenyttet = Math.max(0, Math.min(benyttetLan, sikkerRamme));
-                const gjenstaende = sikkerRamme - sikkerBenyttet;
-                const utnyttelse = sikkerRamme > 0 ? (sikkerBenyttet / sikkerRamme) * 100 : 0;
-                const utnyttelseFarge = utnyttelse >= 90 ? colors.danger : utnyttelse >= 70 ? colors.accent : colors.success;
+                const lanRamme = portefoljeBeregning.faktiskLanebelop;
+                const sikkerBenyttet = Math.max(0, benyttetLan);
+                const gjenstaende = lanRamme - sikkerBenyttet;
+                const utnyttelse = lanRamme > 0 ? (sikkerBenyttet / lanRamme) * 100 : 0;
+                const utnyttelseFarge = utnyttelse >= 100 ? colors.danger : utnyttelse >= 90 ? colors.danger : utnyttelse >= 70 ? colors.accent : colors.success;
+                const overskrider = sikkerBenyttet > lanRamme;
 
                 return (
                   <>
                     <div style={{ fontSize: '11px', color: colors.textMuted, marginBottom: '12px' }}>
-                      Registrer lånrammen din og hvor mye som allerede er benyttet for å se gjenværende kapasitet.
+                      Lånrammen beregnes som <strong>{formatProsent(portefoljeBeregning.faktiskLTV)} LTV</strong> × egenkapital. Fyll inn hvor mye av rammen som allerede er benyttet.
                     </div>
 
-                    <div style={{ marginBottom: '12px' }}>
-                      <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <span className="label-text">Total lånramme</span>
-                        <span className="value-text">{formatNOK(sikkerRamme)}</span>
-                      </label>
-                      <input type="number" value={lanRamme} onChange={(e) => setLanRamme(Number(e.target.value) || 0)} step={100000} min={0} />
+                    <div style={{ marginBottom: '12px', padding: '10px 12px', background: `${colors.primary}08`, borderRadius: '6px', border: `1px solid ${colors.primary}25` }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <div style={{ fontSize: '10px', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Tilgjengelig lånramme</div>
+                          <div style={{ fontSize: '9px', color: colors.textMuted, marginTop: '2px' }}>{formatNOK(portefoljeBeregning.totalVerdi)} × {formatProsent(portefoljeBeregning.faktiskLTV)}</div>
+                        </div>
+                        <div style={{ fontSize: '16px', fontWeight: '700', color: colors.primary }}>{formatNOK(lanRamme)}</div>
+                      </div>
                     </div>
 
                     <div style={{ marginBottom: '14px' }}>
@@ -711,21 +720,21 @@ const PensumVerdipapirbelaning = () => {
                       </div>
                       <div className="result-box success">
                         <div style={{ fontSize: '9px', color: colors.textMuted, marginBottom: '3px', textTransform: 'uppercase' }}>Gjenstående</div>
-                        <div style={{ fontSize: '14px', fontWeight: '700', color: colors.success }}>{formatNOK(gjenstaende)}</div>
+                        <div style={{ fontSize: '14px', fontWeight: '700', color: gjenstaende < 0 ? colors.danger : colors.success }}>{formatNOK(gjenstaende)}</div>
                       </div>
                     </div>
 
-                    {sikkerRamme > 0 && (
+                    {lanRamme > 0 && (
                       <div style={{ marginTop: '10px', padding: '8px 12px', background: colors.lightGray, borderRadius: '5px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontSize: '11px', color: colors.textMuted }}>Årlig rentekostnad benyttet lån</span>
                         <span style={{ fontSize: '12px', fontWeight: '700', color: colors.danger }}>{formatNOK(sikkerBenyttet * (totalRente / 100))}</span>
                       </div>
                     )}
 
-                    {benyttetLan > lanRamme && lanRamme > 0 && (
+                    {overskrider && (
                       <div className="danger-box">
                         <div style={{ fontSize: '11px', color: colors.danger, fontWeight: '600' }}>
-                          ⚠️ Benyttet lån overskrider rammen med {formatNOK(benyttetLan - lanRamme)}
+                          ⚠️ Benyttet lån overskrider rammen med {formatNOK(sikkerBenyttet - lanRamme)}
                         </div>
                       </div>
                     )}
@@ -1131,7 +1140,7 @@ const PensumVerdipapirbelaning = () => {
             )}
 
             {/* MAKS BELÅNING MED REINVESTERING */}
-            {modus === 'maksbelaning' && (
+            {visMaksBelaning && (
               <div className="pensum-card" style={{ marginBottom: '16px' }}>
                 <h2 className="section-title">🚀 Maks belåning med reinvestering</h2>
                 <div style={{ fontSize: '11px', color: colors.textMuted, marginBottom: '14px', padding: '10px 14px', background: colors.lightGray, borderRadius: '5px', lineHeight: '1.5' }}>
